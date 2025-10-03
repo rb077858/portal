@@ -4,24 +4,9 @@
   <meta charset="UTF-8" />
   <title>פורטל אישי</title>
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      max-width: 500px; 
-      margin: auto; 
-      padding: 20px; 
-      text-align: center; 
-    }
-    input, button { 
-      padding: 8px; 
-      font-size: 16px; 
-      margin-top: 10px; 
-      width: 80%; 
-    }
-    #result { 
-      margin-top: 20px; 
-      text-align: right; 
-      white-space: pre-line; 
-    }
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; text-align: center; }
+    input, button { padding: 8px; font-size: 16px; margin-top: 10px; width: 80%; }
+    #result { margin-top: 20px; text-align: right; white-space: pre-line; }
   </style>
 </head>
 <body>
@@ -32,7 +17,6 @@
   <div id="result"></div>
 
   <script>
-    // ❗ הדבק כאן את הקישור ל-Web App שלך
     const scriptURL = "https://script.google.com/macros/s/AKfycbwgHadTxLzzQnKOmQG9tH3vYjC2T1Zd-KtvBn-yrefQPc-6NUrzRyNXykil1X69p-BfeA/exec";
 
     function login() {
@@ -47,9 +31,8 @@
             resultDiv.innerHTML = `
               <h3>שלום ${name}</h3>
               <p><strong>פרשת בר מצווה:</strong> ${data[0] || ''}</p>
-              <p><strong>עלה מתחילת שנה:</strong> ${data[1] || ''}</p>
+              <p><strong>עליות מתחילת שנה:</strong> ${data[1] || ''}</p>
               <p><strong>קריאות מתחילת שנה:</strong> ${data[2] || ''}</p>
-              <p><strong>תאריך יום הולדת:</strong> ${data[3] || ''} ב-${data[4] || ''}</p>
             `;
           } else {
             resultDiv.innerHTML = "<p>❌ השם לא נמצא במערכת</p>";

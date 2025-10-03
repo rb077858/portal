@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>פורטל אישי</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; text-align: center; }
+    input, button { padding: 8px; font-size: 16px; margin-top: 10px; width: 80%; }
+    #result { margin-top: 20px; text-align: right; white-space: pre-line; }
+  </style>
+</head>
+<body>
+  <h2>כניסה לפורטל</h2>
+  <input type="text" id="nameInput" placeholder="הכנס שם">
+  <button onclick="login()">כניסה</button>
+
+  <div id="result"></div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwgHadTxLzzQnKOmQG9tH3vYjC2T1Zd-KtvBn-yrefQPc-6NUrzRyNXykil1X69p-BfeA/exec";
+
+    function login() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) return alert("הכנס שם קודם!");
+
+      fetch(`${scriptURL}?name=${encodeURIComponent(name)}`)
+        .then(res => res.json())
+        .then(data => {
+          const resultDiv = document.getElementById('result');
+          if (data && data.length > 0) {
+            resultDiv.innerHTML = `
+              <h3>שלום ${name}</h3>
+              <p><strong>פרשת בר מצווה:</strong> ${data[0] || ''}</p>
+              <p><strong>עליות מתחילת שנה:</strong> ${data[1] || ''}</p>
+              <p><strong>קריאות מתחילת שנה:</strong> ${data[2] || ''}</p>
+            `;
+          } else {
+            resultDiv.innerHTML = "<p>❌ השם לא נמצא במערכת</p>";
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("שגיאה בחיבור לשרת");
+        });
+    }
+  </script>
+</body>
+</html>

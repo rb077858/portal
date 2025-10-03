@@ -1,35 +1,20 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-M29LJRJV');</script>
-  <!-- End Google Tag Manager -->
   <meta charset="UTF-8" />
   <title>פורטל אישי</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; text-align: center; }
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; text-align: center; }
     input, button { padding: 8px; font-size: 16px; margin-top: 10px; width: 80%; }
-    #result, #queue { margin-top: 20px; text-align: right; }
-    .queue-item { display:flex; justify-content:space-between; margin:5px 0; }
+    #result { margin-top: 20px; text-align: right; white-space: pre-line; }
   </style>
 </head>
 <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M29LJRJV"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-
   <h2>כניסה לפורטל</h2>
   <input type="text" id="nameInput" placeholder="הכנס שם">
   <button onclick="login()">כניסה</button>
 
   <div id="result"></div>
-  <div id="queue"></div>
-  <button id="joinQueueBtn" style="display:none;">בקש להצטרף לתור</button>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbwgHadTxLzzQnKOmQG9tH3vYjC2T1Zd-KtvBn-yrefQPc-6NUrzRyNXykil1X69p-BfeA/exec";
@@ -42,28 +27,15 @@
         .then(res => res.json())
         .then(data => {
           const resultDiv = document.getElementById('result');
-          const joinBtn = document.getElementById('joinQueueBtn');
-          const queueDiv = document.getElementById('queue');
-          queueDiv.innerHTML = "";
-
-          if (data.error) {
-            resultDiv.innerHTML = "<p>❌ השם לא נמצא במערכת</p>";
-            joinBtn.style.display = "none";
-            return;
-          }
-
-          // הצגת נתונים אישיים
-          resultDiv.innerHTML = `<h3>שלום ${data.user.name}</h3>
-            <p><strong>פרשת בר מצווה:</strong> ${data.user.parasha}</p>
-            <p><strong>עליות מתחילת שנה:</strong> ${data.user.aliyot}</p>
-            <p><strong>קריאות מתחילת שנה:</strong> ${data.user.readings}</p>`;
-
-          if (data.manager) {
-            // למנהל → הצגת תור בלייב
-            renderQueue(data.queue, true);
+          if (data && data.length > 0) {
+            resultDiv.innerHTML = `
+              <h3>שלום ${name}</h3>
+              <p><strong>פרשת בר מצווה:</strong> ${data[0] || ''}</p>
+              <p><strong>עליות מתחילת שנה:</strong> ${data[1] || ''}</p>
+              <p><strong>קריאות מתחילת שנה:</strong> ${data[2] || ''}</p>
+            `;
           } else {
-            // משתמש רגיל → כפתור להצטרפות לתור
-            joinBtn.style.display = "inline-block";
+            resultDiv.innerHTML = "<p>❌ השם לא נמצא במערכת</p>";
           }
         })
         .catch(err => {
@@ -72,37 +44,11 @@
         });
     }
 
-    // כפתור להצטרפות לתור
-    document.getElementById('joinQueueBtn').addEventListener('click', function() {
-      const name = document.getElementById('nameInput').value.trim();
-      fetch(`${scriptURL}?name=${encodeURIComponent(name)}&action=join`)
-        .then(res => res.json())
-        .then(data => {
-          if(data.status === "ok") alert("בקשה נשלחה!");
-        });
-    });
-
-    // פונקציה להצגת התור
-    function renderQueue(queue, isManager=false) {
-      const queueDiv = document.getElementById('queue');
-      queueDiv.innerHTML = "<h3>תור לעלייה</h3>";
-      queue.forEach(item => {
-        const div = document.createElement('div');
-        div.className = "queue-item";
-        div.innerHTML = `<span>${item.name}</span>
-          ${isManager ? `<button onclick="toggleAllowed('${item.name}')">${item.allowed ? '✔' : '❌'}</button>` : ''}`;
-        queueDiv.appendChild(div);
-      });
-    }
-
-    // פונקציה לדוגמה למנהל לשנות מי יכול לצפות
-    function toggleAllowed(name) {
-      alert(`כאן אפשר להוסיף קוד לעדכון סטטוס הצפייה של ${name} בגיליון`);
-    }
-
     // תמיכה בלחיצה על Enter
     document.getElementById('nameInput').addEventListener('keydown', function(event) {
-      if (event.key === 'Enter') login();
+      if (event.key === 'Enter') {
+        login();
+      }
     });
   </script>
 </body>
